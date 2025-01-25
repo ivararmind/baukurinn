@@ -1,0 +1,290 @@
+{% extends "base.html" %} {% block title %} Staðan {% endblock %} {% block
+content %}
+<div class="container mt-5">
+  <h1
+    class="text-center mb-4"
+    style="font-size: 2.5rem; font-weight: bold; color: #333"
+  >
+    Staðan
+  </h1>
+
+  <!-- Monthly Spending Bar Chart and Recurring Payments -->
+  <div
+    class="text-center my-4 d-flex justify-content-center align-items-center"
+  >
+    <div>
+      <h3 style="font-size: 1.8rem; color: #555; margin-bottom: 20px">
+        Mánaðarlegt útgjald
+      </h3>
+      {% if monthly_chart_img %}
+      <img
+        src="data:image/png;base64,{{ monthly_chart_img }}"
+        alt="Monthly Spending Bar Chart"
+        style="
+          width: 90%;
+          max-width: 700px;
+          height: auto;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+        "
+      />
+      {% else %}
+      <p style="font-size: 1.1rem; color: #777">Engin gögn til að sýna.</p>
+      {% endif %}
+    </div>
+    <div
+      class="ml-4"
+      style="
+        text-align: left;
+        font-size: 1.2rem;
+        max-width: 300px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <h4 style="color: #444; font-size: 1.5rem; margin-bottom: 15px">
+        Sjálfvirkar greiðslur
+      </h4>
+      <p style="font-size: 1.4rem; color: #222; font-weight: bold">
+        {{ total_recurring_payments | format_thousands }} kr/mánuði
+      </p>
+      <p
+        style="
+          font-size: 1.1rem;
+          color: #555;
+          margin-top: 10px;
+          border-top: 1px solid #ddd;
+          padding-top: 10px;
+        "
+      >
+        Þar af eru
+        <span style="font-weight: bold; color: #d9534f">
+          {{ total_non_essential_recurring_payments | format_thousands }} kr.
+        </span>
+        ekki nauðsynlegar
+      </p>
+    </div>
+  </div>
+
+  <!-- Time Period Toggle Buttons -->
+  <div class="d-flex justify-content-center my-4">
+    <div class="btn-group" role="group" aria-label="Time period selection">
+      <button
+        type="button"
+        class="btn btn-outline-primary {% if time_period == 'overall' %}active{% endif %}"
+        data-time-period="overall"
+        style="font-size: 1rem; padding: 10px 20px; transition: all 0.3s ease"
+      >
+        Heild
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary {% if time_period == 'this_month' %}active{% endif %}"
+        data-time-period="this_month"
+        style="font-size: 1rem; padding: 10px 20px; transition: all 0.3s ease"
+      >
+        Þessi mánuður
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary {% if time_period == 'last_month' %}active{% endif %}"
+        data-time-period="last_month"
+        style="font-size: 1rem; padding: 10px 20px; transition: all 0.3s ease"
+      >
+        Síðasti mánuður
+      </button>
+    </div>
+  </div>
+
+  <!-- Tables and Charts -->
+  <div id="tables-and-charts">
+    <!-- Spending by Category -->
+    <div class="mt-5 p-3" style="background-color: #f9f9f9; border-radius: 8px">
+      <h3 class="text-center mb-4" style="font-size: 1.8rem; color: #555">
+        Eftir tegund
+      </h3>
+      <div class="d-flex flex-column flex-md-row justify-content-between">
+        <!-- Spending Table by Category -->
+        <div class="table-container" style="flex: 1; margin-right: 20px">
+          <table
+            class="table table-bordered table-striped mt-3"
+            style="
+              font-size: 0.9rem;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+              overflow: hidden;
+            "
+          >
+            <thead
+              class="thead-dark"
+              style="background-color: #333; color: #fff"
+            >
+              <tr>
+                <th style="font-size: 1rem">Tegund</th>
+                <th style="font-size: 1rem">Kostnaður</th>
+                <th style="font-size: 1rem">Hlutfall</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if total_spending > 0 %} {% for category, amount in
+              spending_by_category.items() %}
+              <tr>
+                <td>{{ category }}</td>
+                <td>{{ amount | format_thousands }} kr</td>
+                <td>
+                  {{ ((amount / total_spending) * 100) | round(0) | int }}%
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td><strong>Heild</strong></td>
+                <td>
+                  <strong>{{ total_spending | format_thousands }} kr</strong>
+                </td>
+                <td><strong>100%</strong></td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="3" class="text-center">Engin gögn til að sýna.</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Donut Chart by Category -->
+        <div
+          class="chart-container"
+          style="flex: 1; text-align: center; margin-top: 20px"
+        >
+          {% if chart_img %}
+          <img
+            src="data:image/png;base64,{{ chart_img }}"
+            alt="Donut Chart"
+            style="
+              width: 90%;
+              max-width: 400px;
+              height: auto;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+            "
+          />
+          {% else %}
+          <p style="font-size: 1.1rem; color: #777">Engin gögn til að sýna.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Spending by Importance -->
+    <div class="mt-5">
+      <h3 class="text-center mb-4" style="font-size: 1.8rem; color: #555">
+        Eftir mikilvægi
+      </h3>
+      <div class="d-flex flex-column flex-md-row justify-content-between">
+        <!-- Spending Table by Importance -->
+        <div class="table-container" style="flex: 1; margin-right: 20px">
+          <table
+            class="table table-bordered table-striped mt-3"
+            style="
+              font-size: 0.9rem;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+            "
+          >
+            <thead
+              class="thead-dark"
+              style="background-color: #333; color: #fff"
+            >
+              <tr>
+                <th style="font-size: 1rem">Mikilvægi</th>
+                <th style="font-size: 1rem">Kostnaður</th>
+                <th style="font-size: 1rem">Hlutfall</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if total_spending > 0 %} {% for importance, amount in
+              spending_by_importance.items() %}
+              <tr>
+                <td>{{ importance }}</td>
+                <td>{{ amount | format_thousands }} kr</td>
+                <td>
+                  {{ ((amount / total_spending) * 100) | round(0) | int }}%
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td><strong>Heild</strong></td>
+                <td>
+                  <strong>{{ total_spending | format_thousands }} kr</strong>
+                </td>
+                <td><strong>100%</strong></td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="3" class="text-center">Engin gögn til að sýna.</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Donut Chart by Importance -->
+        <div
+          class="chart-container"
+          style="flex: 1; text-align: center; margin-top: 20px"
+        >
+          {% if importance_chart_img %}
+          <img
+            src="data:image/png;base64,{{ importance_chart_img }}"
+            alt="Importance Donut Chart"
+            style="
+              width: 90%;
+              max-width: 400px;
+              height: auto;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+            "
+          />
+          {% else %}
+          <p style="font-size: 1.1rem; color: #777">Engin gögn til að sýna.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript to handle time period toggle buttons -->
+<script>
+  document.querySelectorAll(".btn-group button").forEach((button) => {
+    button.addEventListener("click", function () {
+      const timePeriod = this.getAttribute("data-time-period");
+
+      // Remove active class from all buttons
+      document
+        .querySelectorAll(".btn-group button")
+        .forEach((btn) => btn.classList.remove("active"));
+
+      // Add active class to the clicked button
+      this.classList.add("active");
+
+      // Fetch updated data for the selected time period
+      fetch(`/stadan?time_period=${timePeriod}`)
+        .then((response) => response.text())
+        .then((html) => {
+          // Parse the new HTML and update only the tables and charts
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const newTablesAndCharts = doc.querySelector("#tables-and-charts");
+          document.getElementById("tables-and-charts").innerHTML =
+            newTablesAndCharts.innerHTML;
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    });
+  });
+</script>
+{% endblock %}

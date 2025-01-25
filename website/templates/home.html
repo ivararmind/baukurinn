@@ -1,0 +1,373 @@
+{% extends "base.html" %} {% block title %} Home {% endblock %} {% block content
+%}
+
+<div class="container mt-5">
+  <!-- Button for reporting automatic payments -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 style="font-size: 2rem; color: #333; font-weight: bold">Ný færsla</h1>
+    <button
+      class="btn btn-primary"
+      onclick="toggleAutomaticPaymentForm()"
+      style="
+        margin-left: auto;
+        padding: 8px 20px;
+        background-color: #007bff;
+        border-radius: 8px;
+      "
+    >
+      Skrá sjálfvirka greiðslu
+    </button>
+  </div>
+
+  <!-- Nýjar Færslur -->
+  <form method="POST" id="normalExpenseForm">
+    <div class="form-group">
+      <label for="item" style="font-weight: bold; color: #555">Hlutur:</label>
+      <input
+        type="text"
+        name="item"
+        id="item"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      />
+    </div>
+    <div class="form-group">
+      <label for="category" style="font-weight: bold; color: #555"
+        >Tegund:</label
+      >
+      <select
+        name="category"
+        id="category"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      >
+        <option value="">Veldu tegund</option>
+        <option value="fun">Skemmtun</option>
+        <option value="eatout">Út að borða</option>
+        <option value="health">Heilsa</option>
+        <option value="groceries">Matarinnkaup</option>
+        <option value="clothing">Föt</option>
+        <option value="living">Heimiliskostnaður</option>
+        <option value="trans">Samgöngur</option>
+        <option value="misc">Ýmislegt Annað</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="importance" style="font-weight: bold; color: #555"
+        >Mikilvægi:</label
+      >
+      <select
+        name="importance"
+        id="importance"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      >
+        <option value="">Veldu mikilvægi</option>
+        <option value="essential">Nauðsynlegt</option>
+        <option value="need">Gott að hafa</option>
+        <option value="nice">Lúxus</option>
+        <option value="shouldnt">Þarf ekki</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="amount" style="font-weight: bold; color: #555">Verð:</label>
+      <input
+        type="number"
+        name="amount"
+        id="amount"
+        class="form-control"
+        min="1"
+        required
+        style="border-radius: 8px"
+      />
+    </div>
+    <div align="center">
+      <button
+        type="submit"
+        class="btn btn-success"
+        style="
+          border-radius: 8px;
+          padding: 10px 30px;
+          background-color: #28a745;
+          border-color: #28a745;
+        "
+      >
+        Skrá
+      </button>
+    </div>
+  </form>
+
+  <!-- Automatic Payment Form (Hidden by default) -->
+  <form method="POST" id="automaticExpenseForm" style="display: none">
+    <div class="form-group">
+      <label for="itemAuto" style="font-weight: bold; color: #555"
+        >Hlutur:</label
+      >
+      <input
+        type="text"
+        name="item"
+        id="itemAuto"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      />
+    </div>
+    <div class="form-group">
+      <label for="categoryAuto" style="font-weight: bold; color: #555"
+        >Tegund:</label
+      >
+      <select
+        name="category"
+        id="categoryAuto"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      >
+        <option value="">Veldu tegund</option>
+        <option value="fun">Skemmtun</option>
+        <option value="eatout">Út að borða</option>
+        <option value="health">Heilsa</option>
+        <option value="groceries">Matarinnkaup</option>
+        <option value="clothing">Föt</option>
+        <option value="living">Heimiliskostnaður</option>
+        <option value="trans">Samgöngur</option>
+        <option value="misc">Ýmislegt Annað</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="importanceAuto" style="font-weight: bold; color: #555"
+        >Mikilvægi:</label
+      >
+      <select
+        name="importance"
+        id="importanceAuto"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      >
+        <option value="">Veldu mikilvægi</option>
+        <option value="essential">Nauðsynlegt</option>
+        <option value="need">Gott að hafa</option>
+        <option value="nice">Lúxus</option>
+        <option value="shouldnt">Þarf ekki</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="amountAuto" style="font-weight: bold; color: #555"
+        >Verð:</label
+      >
+      <input
+        type="number"
+        name="amount"
+        id="amountAuto"
+        class="form-control"
+        min="1"
+        required
+        style="border-radius: 8px"
+      />
+    </div>
+    <div class="form-group">
+      <label for="frequency" style="font-weight: bold; color: #555"
+        >Tíðni greiðslu:</label
+      >
+      <select
+        name="frequency"
+        id="frequency"
+        class="form-control"
+        required
+        style="border-radius: 8px"
+      >
+        <option value="">Veldu fjölda</option>
+        <option value="weekly">Vikulega</option>
+        <option value="monthly">Mánaðalega</option>
+        <option value="yearly">Árlega</option>
+      </select>
+    </div>
+    <div align="center">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="
+          border-radius: 8px;
+          padding: 10px 30px;
+          background-color: #007bff;
+          border-color: #007bff;
+        "
+      >
+        Skrá sjálfvirka greiðslu
+      </button>
+    </div>
+  </form>
+
+  <!-- Eldri Færslur skrollari -->
+  <div class="row mt-5">
+    <!-- Normal Logs -->
+    <div class="col-md-6">
+      <h4
+        align="center"
+        style="color: #333; font-size: 1.5rem; font-weight: bold"
+      >
+        Eldri færslur
+      </h4>
+      <div
+        class="scroll-container"
+        style="
+          max-height: 300px;
+          overflow-y: auto;
+          border: 1px solid #ccc;
+          padding: 15px;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+        "
+      >
+        <ul class="list-group">
+          {% for log in normal_logs %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            data-id="{{ log.id }}"
+            style="
+              border-radius: 8px;
+              margin-bottom: 10px;
+              background-color: #f1f1f1;
+              padding: 12px;
+            "
+          >
+            <span style="color: #333">
+              {{ log.amount|float|format_thousands }} kr. |
+              <strong>{{ log.item }}</strong>
+              {% if log.importance == "essential" %} | Nauðsynlegt {% elif
+              log.importance == "need" %} | Gott að hafa {% elif log.importance
+              == "nice" %} | Lúxus {% elif log.importance == "shouldnt" %} |
+              Þarf ekki {% else %} Óþekkt {% endif %}
+            </span>
+            <span style="margin-left: auto; color: #777">
+              {{ log.date.strftime('%-d. %B %Y') }}
+            </span>
+            <button
+              type="button"
+              class="close"
+              onClick="deleteExpense('{{ log.id }}')"
+              style="margin-left: 10px; color: #e74c3c; font-size: 1.2rem"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Recurring Logs -->
+    <div class="col-md-6">
+      <h4
+        align="center"
+        style="color: #333; font-size: 1.5rem; font-weight: bold"
+      >
+        Væntanlegar sjálfvirkar greiðslur
+      </h4>
+      <div
+        class="scroll-container"
+        style="
+          max-height: 300px;
+          overflow-y: auto;
+          border: 1px solid #ccc;
+          padding: 15px;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+        "
+      >
+        <ul class="list-group">
+          {% for log in recurring_logs %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+            data-id="{{ log.id }}"
+            style="
+              border-radius: 8px;
+              margin-bottom: 10px;
+              background-color: #f1f1f1;
+              padding: 12px;
+            "
+          >
+            <span style="color: #333">
+              {{ log.amount|float|format_thousands }} kr. |
+              <strong>{{ log.item }} &nbsp </strong>
+            </span>
+            <span style="color: #777">
+              <strong>Næsta greiðsla:</strong>
+              {{ log.next_payment_date.strftime('%-d. %B %Y') }}
+            </span>
+            <button
+              type="button"
+              class="close"
+              onClick="deleteRecurringExpense('{{ log.id }}')"
+              style="margin-left: 10px; color: #e74c3c; font-size: 1.2rem"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% block javascript %}
+  <script type="text/javascript">
+    function deleteExpense(expenseId) {
+      if (confirm("Ertu viss um að þú viljir eyða þessari færslu?")) {
+        fetch("/delete-expense", {
+          method: "POST",
+          body: JSON.stringify({ expenseId: expenseId }),
+        }).then((_res) => {
+          const expenseElement = document.querySelector(
+            `[data-id="${expenseId}"]`
+          );
+          if (expenseElement) {
+            expenseElement.remove();
+          }
+        });
+      }
+    }
+
+    function deleteRecurringExpense(expenseId) {
+      if (
+        confirm("Ertu viss um að þú viljir eyða þessari sjálfvirku greiðslu?")
+      ) {
+        fetch("/delete-expense", {
+          // Updated to /delete-expense
+          method: "POST",
+          body: JSON.stringify({ expenseId: expenseId }),
+        }).then((_res) => {
+          const expenseElement = document.querySelector(
+            `[data-id="${expenseId}"]`
+          );
+          if (expenseElement) {
+            expenseElement.remove();
+          }
+        });
+      }
+    }
+
+    function toggleAutomaticPaymentForm() {
+      const normalForm = document.getElementById("normalExpenseForm");
+      const automaticForm = document.getElementById("automaticExpenseForm");
+
+      if (
+        automaticForm.style.display === "none" ||
+        automaticForm.style.display === ""
+      ) {
+        automaticForm.style.display = "block";
+        normalForm.style.display = "none";
+      } else {
+        automaticForm.style.display = "none";
+        normalForm.style.display = "block";
+      }
+    }
+  </script>
+  {% endblock %}
+</div>
+
+{% endblock %}
