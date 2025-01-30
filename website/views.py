@@ -375,6 +375,6 @@ def contact():
         except Exception as e:
             flash(f"Error: {str(e)}", "danger")
 
-        return redirect(url_for("contact"))
+        return redirect(url_for("contact.html"))
 
     return render_template("contact.html", user=current_user)
