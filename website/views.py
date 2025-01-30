@@ -377,4 +377,4 @@ def contact():
 
         return redirect(url_for("contact"))
 
-    return render_template("contact.html")
+    return render_template("contact.html", user=current_user)
