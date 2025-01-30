@@ -12,6 +12,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.ticker import FuncFormatter
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from flask_mail import Mail, Message
+from . import mail
 
 
 
@@ -347,3 +349,31 @@ def stadan():
         total_non_essential_recurring_payments=non_essential_total
         
         )
+
+
+
+
+
+@views.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        subject = request.form.get("subject")
+        message = request.form.get("message")
+
+        # Set up the email message
+        msg = Message(subject,
+                     sender=email,
+                     recipients=['your-email@gmail.com'])  # Replace with your email
+        msg.body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+        try:
+            mail.send(msg)  # Send the email
+            flash("Your message has been sent successfully!", "success")
+        except Exception as e:
+            flash(f"Error: {str(e)}", "danger")
+
+        return redirect(url_for("contact"))
+
+    return render_template("contact.html")

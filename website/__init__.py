@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_mail import Mail
 
 
+mail = Mail() 
 
 db = SQLAlchemy()
 migrate = Migrate()  
@@ -17,6 +19,13 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)  
 
+
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_USERNAME'] = 'ivararmind@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'sbzc hfuy glqy xdvw'
+    mail.init_app(app)  # Initialize Mail with app here
 
 
 
