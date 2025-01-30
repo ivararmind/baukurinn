@@ -1,33 +1,37 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
-%}
-<form method="POST" action="{{ url_for('auth.login') }}">
-  <h3 align="center">Innskráning</h3>
-  <div class="form-group">
-    <label for="email">Netfang</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Skrifaðu netfang"
-    />
+{% extends "base.html" %} {% block title %}Innskráning - Baukurinn{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%">
+    <h2 class="text-center text-primary">Baukurinn</h2>
+    <h3 class="text-center">Innskráning</h3>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="form-group">
+        <label for="email">Netfang</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Skrifaðu netfang"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Lykilorð</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Skrifaðu lykilorð"
+          required
+        />
+      </div>
+      <div class="d-flex justify-content-between mt-3">
+        <a href="{{ url_for('auth.sign_up') }}">Stofna aðgang</a>
+        <button type="submit" class="btn btn-primary">Skrá inn</button>
+      </div>
+    </form>
   </div>
-
-  <div class="form-group">
-    <label for="password">Lykilorð</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password"
-      name="password"
-      placeholder="Skrifaðu lykilorð"
-    />
-  </div>
-  <br />
-  <!-- Link to sign-up route -->
-  <p style="text-align: right">
-    <a href="{{ url_for('auth.sign_up') }}">Stofna aðgang</a>
-  </p>
-  <button type="submit" class="btn btn-primary">Skrá inn</button>
-</form>
+</div>
 {% endblock %}

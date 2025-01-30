@@ -1,48 +1,58 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
-content %}
-<form method="POST">
-  <h3 align="center">Stofna aðgang</h3>
-  <div class="form-group">
-    <label for="email">Netfang</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Skrifaðu netfang"
-    />
+{% extends "base.html" %} {% block title %}Stofna aðgang - Baukurinn{% endblock
+%} {% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%">
+    <h2 class="text-center text-primary">Baukurinn</h2>
+    <h3 class="text-center">Stofna aðgang</h3>
+    <form method="POST">
+      <div class="form-group">
+        <label for="email">Netfang</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Skrifaðu netfang"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="firstName">Fyrsta nafn</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          name="firstName"
+          placeholder="Skrifaðu fyrsta nafn"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password1">Lykilorð</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password1"
+          name="password1"
+          placeholder="Skrifaðu lykilorð"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password2">Lykilorð (Staðfesta)</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password2"
+          name="password2"
+          placeholder="Staðfestu lykilorðið"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mt-3">
+        Stofna aðgang
+      </button>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="firstName">Fyrsta nafn</label>
-    <input
-      type="text"
-      class="form-control"
-      id="firstName"
-      name="firstName"
-      placeholder="Skrifaðu fyrsta nafn"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password1">Lykilorð</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password1"
-      name="password1"
-      placeholder="Skrifaðu lykilorð"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password2">Lykilorð (Staðfesta)</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password2"
-      name="password2"
-      placeholder="Staðfestu lykilorðið"
-    />
-  </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Stofna aðgang</button>
-</form>
+</div>
 {% endblock %}
