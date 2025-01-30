@@ -362,15 +362,14 @@ def contact():
         email = request.form.get("email")
         message = request.form.get("message")
 
-        # Set up the email message
         msg = Message(
                      sender=email,
-                     recipients=['your-email@gmail.com'])  # Replace with your email
+                     recipients=['ivararmind@gmail.com'])  
         msg.body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
 
         try:
             mail.send(msg)  # Send the email
-            flash("Your message has been sent successfully!", "success")
+            flash("Skilaboð send", "success")
         except Exception as e:
             flash(f"Error: {str(e)}", "danger")
 
