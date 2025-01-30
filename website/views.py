@@ -355,6 +355,7 @@ def stadan():
 
 
 @views.route("/contact", methods=["GET", "POST"])
+@login_required
 def contact():
     if request.method == "POST":
         name = request.form.get("name")
