@@ -360,11 +360,10 @@ def contact():
     if request.method == "POST":
         name = request.form.get("name")
         email = request.form.get("email")
-        subject = request.form.get("subject")
         message = request.form.get("message")
 
         # Set up the email message
-        msg = Message(subject,
+        msg = Message(
                      sender=email,
                      recipients=['your-email@gmail.com'])  # Replace with your email
         msg.body = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
@@ -375,6 +374,6 @@ def contact():
         except Exception as e:
             flash(f"Error: {str(e)}", "danger")
 
-        return redirect(url_for("contact.html"))
+        return redirect(url_for("views.contact"))
 
     return render_template("contact.html", user=current_user)
