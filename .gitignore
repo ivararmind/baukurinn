@@ -1,8 +1,6 @@
-requirements.txt
 .env
 database.db
 .DS_Store
 __pycache__
 migrations
 instance
-.gitignore
