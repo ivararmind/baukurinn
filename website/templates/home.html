@@ -2,7 +2,7 @@
 %}
 
 <div class="container mt-5">
-  <!-- Button for reporting automatic payments -->
+  <!-- sjálfvirkur takkinn -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 style="font-size: 2rem; color: #333; font-weight: bold">Ný færsla</h1>
     <button
@@ -337,7 +337,6 @@
         confirm("Ertu viss um að þú viljir eyða þessari sjálfvirku greiðslu?")
       ) {
         fetch("/delete-expense", {
-          // Updated to /delete-expense
           method: "POST",
           body: JSON.stringify({ expenseId: expenseId }),
         }).then((_res) => {

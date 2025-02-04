@@ -47,15 +47,14 @@ def sign_up():
             flash('Fyrsta nafn þarf að vera lengra en 1 stafur', category='error')
         elif password1 != password2:
             flash('Lykilorð eru ekki eins', category='error')
-        elif len(password1) < 7:
-            flash('Lykilorð þarf að vera lengra en 6 stafir', category='error')
+        elif len(password1) < 9:
+            flash('Lykilorð þarf að vera 9 stafir eða lengra', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(password1))
             db.session.add(new_user)
             db.session.commit()
 
-            # Log in the newly created user instead of the existing one
-            login_user(new_user, remember=True)  # Change this line
+            login_user(new_user, remember=True)  
 
             flash('Aðgangur stofnaður!', category='success')
             return redirect(url_for('views.home'))

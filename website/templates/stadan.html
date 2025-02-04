@@ -8,7 +8,7 @@ content %}
     Staðan
   </h1>
 
-  <!-- Monthly Spending Bar Chart and Recurring Payments -->
+  <!-- manaðalegt -->
   <div
     class="text-center my-4 d-flex justify-content-center align-items-center"
   >
@@ -69,7 +69,7 @@ content %}
     </div>
   </div>
 
-  <!-- Time Period Toggle Buttons -->
+  <!-- timinn -->
   <div class="d-flex justify-content-center my-4">
     <div class="btn-group" role="group" aria-label="Time period selection">
       <button
@@ -99,15 +99,13 @@ content %}
     </div>
   </div>
 
-  <!-- Tables and Charts -->
+  <!-- tafla og charts -->
   <div id="tables-and-charts">
-    <!-- Spending by Category -->
     <div class="mt-5 p-3" style="background-color: #f9f9f9; border-radius: 8px">
       <h3 class="text-center mb-4" style="font-size: 1.8rem; color: #555">
         Eftir tegund
       </h3>
       <div class="d-flex flex-column flex-md-row justify-content-between">
-        <!-- Spending Table by Category -->
         <div class="table-container" style="flex: 1; margin-right: 20px">
           <table
             class="table table-bordered table-striped mt-3"
@@ -155,7 +153,7 @@ content %}
           </table>
         </div>
 
-        <!-- Donut Chart by Category -->
+        <!-- donut chart -->
         <div
           class="chart-container"
           style="flex: 1; text-align: center; margin-top: 20px"
@@ -179,13 +177,12 @@ content %}
       </div>
     </div>
 
-    <!-- Spending by Importance -->
+    <!--mikilvægi -->
     <div class="mt-5">
       <h3 class="text-center mb-4" style="font-size: 1.8rem; color: #555">
         Eftir mikilvægi
       </h3>
       <div class="d-flex flex-column flex-md-row justify-content-between">
-        <!-- Spending Table by Importance -->
         <div class="table-container" style="flex: 1; margin-right: 20px">
           <table
             class="table table-bordered table-striped mt-3"
@@ -232,7 +229,7 @@ content %}
           </table>
         </div>
 
-        <!-- Donut Chart by Importance -->
+        <!-- Donut Chart  -->
         <div
           class="chart-container"
           style="flex: 1; text-align: center; margin-top: 20px"
@@ -258,25 +255,20 @@ content %}
   </div>
 </div>
 
-<!-- JavaScript to handle time period toggle buttons -->
 <script>
   document.querySelectorAll(".btn-group button").forEach((button) => {
     button.addEventListener("click", function () {
       const timePeriod = this.getAttribute("data-time-period");
 
-      // Remove active class from all buttons
       document
         .querySelectorAll(".btn-group button")
         .forEach((btn) => btn.classList.remove("active"));
 
-      // Add active class to the clicked button
       this.classList.add("active");
 
-      // Fetch updated data for the selected time period
       fetch(`/stadan?time_period=${timePeriod}`)
         .then((response) => response.text())
         .then((html) => {
-          // Parse the new HTML and update only the tables and charts
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, "text/html");
           const newTablesAndCharts = doc.querySelector("#tables-and-charts");
