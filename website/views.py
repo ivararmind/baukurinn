@@ -10,7 +10,7 @@ import io
 import base64
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.ticker import FuncFormatter
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 from flask_mail import Mail, Message
 from . import mail
@@ -41,7 +41,7 @@ def home():
         else:
 
             if frequency:
-                current_date = datetime.utcnow()
+                current_date = datetime.now(timezone.utc)
                 next_payment_date = calculate_next_payment_date(frequency, current_date)
 
                 new_log = Log(
@@ -82,7 +82,7 @@ def home():
     logs = Log.query.filter_by(user_id=current_user.id).all()
 
     for log in logs:
-        if log.frequency and log.next_payment_date <= datetime.utcnow():
+        if log.frequency and log.next_payment_date <= datetime.now(timezone.utc):
             normal_expense = Log(
                 item=log.item,
                 category=log.category,
@@ -92,7 +92,7 @@ def home():
             )
             db.session.add(normal_expense)
 
-            next_payment_date = calculate_next_payment_date(log.frequency, datetime.utcnow())
+            next_payment_date = calculate_next_payment_date(log.frequency, datetime.now(timezone.utc))
             log.next_payment_date = next_payment_date
 
     db.session.commit()
@@ -128,7 +128,7 @@ def report_automatic():
     except ValueError:
         return jsonify({"success": False, "error": "Invalid amount"}), 400
 
-    current_date = datetime.utcnow()
+    current_date = datetime.now(timezone.utc)
 
     next_payment_date = calculate_next_payment_date(frequency, current_date)
 
@@ -148,6 +148,9 @@ def report_automatic():
 
 #reikna út næst pay
 def calculate_next_payment_date(frequency, last_payment_date):
+    if last_payment_date.tzinfo is None:
+        last_payment_date = last_payment_date.replace(tzinfo=timezone.utc)
+        
     if frequency == 'monthly':
         return last_payment_date + timedelta(days=30)  
     elif frequency == 'weekly':
@@ -155,7 +158,7 @@ def calculate_next_payment_date(frequency, last_payment_date):
     elif frequency == 'yearly':
         return last_payment_date + timedelta(weeks=52)  
     else:
-        return last_payment_date 
+        return last_payment_date
 
 
 #eyða færslu
@@ -209,7 +212,7 @@ def stadan():
     time_period = request.args.get('time_period', 'overall')
 
     logs = Log.query.filter_by(user_id=current_user.id).all()
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     if time_period == 'this_month':
         logs = [log for log in logs if log.date and log.date.year == now.year and log.date.month == now.month]
